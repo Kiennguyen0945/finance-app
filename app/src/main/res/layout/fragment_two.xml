@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <!-- Khu vực Bộ lọc (Filters) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:padding="8dp"
+        android:elevation="2dp">
+
+        <!-- Lọc theo Tháng (Sẽ dùng Spinner trong code) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tháng:"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"/>
+            <Spinner
+                android:id="@+id/spinnerMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Lọc theo Loại (RadioGroup) -->
+        <RadioGroup
+            android:id="@+id/rgFilterType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rbAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tất cả"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbIncomeOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chỉ Thu"
+                android:layout_marginStart="16dp" />
+
+            <RadioButton
+                android:id="@+id/rbExpenseOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chỉ Chi"
+                android:layout_marginStart="16dp" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Danh sách giao dịch"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Trạng thái trống (Sẽ ẩn/hiện bằng code) -->
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Không có giao dịch nào"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:textColor="#888888" />
+
+    <!-- Danh sách hiển thị -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAllTransactions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
