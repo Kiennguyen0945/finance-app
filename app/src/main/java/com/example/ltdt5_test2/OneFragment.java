@@ -42,18 +42,21 @@ public class OneFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
 
-        dbHelper = new DatabaseHelper(requireContext());
+        dbHelper = new DatabaseHelper(requireContext()); // đối tượng làm việc với Database (lấy context từ Fragment)
 
         tvTotalBalance = view.findViewById(R.id.tvTotalBalance);
         tvTotalIncome = view.findViewById(R.id.tvTotalIncome);
         tvTotalExpense = view.findViewById(R.id.tvTotalExpense);
+
         RecyclerView rvRecent = view.findViewById(R.id.rvRecentTransactions);
         FloatingActionButton fabAdd = view.findViewById(R.id.fabAddTransaction);
 
-        adapter = new TransactionAdapter(transactionList);
-        rvRecent.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvRecent.setAdapter(adapter);
+        adapter = new TransactionAdapter(transactionList); //adapter = cầu nối giữa: transactionList (dữ liệu) và RecyclerView (UI)
 
+        rvRecent.setLayoutManager(new LinearLayoutManager(getContext())); // Hiển thị dạng: Danh sách dọc (vertical list)
+        rvRecent.setAdapter(adapter); // gắn Adapter vào RecyclerView (dữ liệu sẽ hiện lên màn hình)
+
+        // Load dữ liệu từ Database
         loadDataFromDatabase();
 
         fabAdd.setOnClickListener(v -> showAddTransactionDialog());
@@ -65,7 +68,7 @@ public class OneFragment extends Fragment {
         transactionList.clear();
         transactionList.addAll(dbHelper.getAllTransactions());
         adapter.notifyDataSetChanged();
-        updateDashboard();
+        updateDashboard(); // của riêng frag_1
     }
 
     private void updateDashboard() {

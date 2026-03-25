@@ -15,22 +15,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        ViewPager viewPager = findViewById(R.id.viewpager);
+        // ánh xạ View
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+        ViewPager viewPager = findViewById(R.id.viewpager); //ViewPaper cho phép vuốt trái phải chuyển màn hình
         TabLayout tabLayout = findViewById(R.id.tabs);
 
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);  // Biến Toolbar thành thanh điều hướng chính
 
         // Khởi tạo Adapter và gắn mảnh (Fragment) vào
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager()); //getSupportFragmentManager() để quản lý các Fragment
+
+        // add
         adapter.addFragment(new OneFragment(), "Tổng quan");
-        
-        // Đã bỏ dấu // ở 2 dòng dưới để hiện tab
         adapter.addFragment(new TwoFragment(), "Lịch sử");
         adapter.addFragment(new ThreeFragment(), "Cài đặt");
 
+        // gắn Adapter vào ViewPager
         viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager); // kết nối TabLayout với ViewPager
+
     }
 }

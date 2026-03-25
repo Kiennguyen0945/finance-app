@@ -16,6 +16,17 @@ import java.util.Locale;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
     private List<Transaction> transactions;
+    private OnItemClickListener listener; // Interface để xử lý sự kiện click
+
+
+    // Interface để xử lý sự kiện click
+    public interface OnItemClickListener {
+        void onItemClick(Transaction transaction);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public TransactionAdapter(List<Transaction> transactions) {
         this.transactions = transactions;
@@ -32,8 +43,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvDate = view.findViewById(R.id.tvDate);
             tvAmount = view.findViewById(R.id.tvAmount);
         }
+
+        // Gắn sự kiện click vào item
+        public void bind(final Transaction transaction, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(transaction);
+                    }
+                }
+            });
+        }
     }
 
+    // Tạo ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,6 +66,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return new ViewHolder(view);
     }
 
+    // Gắn dữ liệu vào ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction tx = transactions.get(position);
@@ -58,10 +83,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.tvAmount.setText("-" + formattedAmount);
             holder.tvAmount.setTextColor(Color.parseColor("#F44336"));
         }
+
+        holder.bind(tx, listener); // Gắn sự kiện click vào item
     }
 
+    // Số lượng item hiển thị
     @Override
     public int getItemCount() {
-        return Math.min(transactions.size(), 5);
+        return transactions.size();
     }
 }

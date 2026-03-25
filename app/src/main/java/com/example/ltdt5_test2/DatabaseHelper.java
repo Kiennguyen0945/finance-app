@@ -60,10 +60,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    // Lấy tất cả giao dịch (CRUD - Read)
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TRANSACTIONS + " ORDER BY " + COLUMN_ID + " DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Transaction transaction = new Transaction(
+                        cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TYPE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOTE))
+                );
+                list.add(transaction);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    // Lấy tất cả giao dịch "thu" (CRUD - Read)
+    public List<Transaction> get_Incomes_Transactions() {
+        List<Transaction> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TRANSACTIONS + " WHERE " + COLUMN_TYPE + " = 1" + " ORDER BY " + COLUMN_ID + " DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Transaction transaction = new Transaction(
+                        cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TYPE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOTE))
+                );
+                list.add(transaction);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    // Lấy tất cả giao dịch "chi" (CRUD - Read)
+    public List<Transaction> get_Expenses_Transactions() {
+        List<Transaction> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TRANSACTIONS + " WHERE " + COLUMN_TYPE + " = 2" + " ORDER BY " + COLUMN_ID + " DESC", null);
 
         if (cursor.moveToFirst()) {
             do {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -25,12 +26,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tháng:"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_marginEnd="8dp"/>
+
             <Spinner
                 android:id="@+id/spinnerMonth"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#000000"/>
+
         </LinearLayout>
 
         <!-- Lọc theo Loại (RadioGroup) -->
@@ -46,6 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tất cả"
+                android:textColor="@color/black"
                 android:checked="true" />
 
             <RadioButton
@@ -53,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chỉ Thu"
+                android:textColor="@color/black"
                 android:layout_marginStart="16dp" />
 
             <RadioButton
@@ -60,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chỉ Chi"
+                android:textColor="@color/black"
                 android:layout_marginStart="16dp" />
         </RadioGroup>
     </LinearLayout>
@@ -68,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Danh sách giao dịch"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp" />
@@ -87,6 +96,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAllTransactions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+
+        tools:listitem="@android:layout/simple_list_item_2"/>
 
 </LinearLayout>
