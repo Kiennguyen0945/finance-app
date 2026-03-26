@@ -42,6 +42,7 @@ public class OneFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
 
+
         dbHelper = new DatabaseHelper(requireContext()); // đối tượng làm việc với Database (lấy context từ Fragment)
 
         tvTotalBalance = view.findViewById(R.id.tvTotalBalance);
@@ -50,6 +51,7 @@ public class OneFragment extends Fragment {
 
         RecyclerView rvRecent = view.findViewById(R.id.rvRecentTransactions);
         FloatingActionButton fabAdd = view.findViewById(R.id.fabAddTransaction);
+        FloatingActionButton fabLoad = view.findViewById(R.id.fab_LoadTransaction); // nút load _ Vĩ thêmmm
 
         adapter = new TransactionAdapter(transactionList); //adapter = cầu nối giữa: transactionList (dữ liệu) và RecyclerView (UI)
 
@@ -60,6 +62,7 @@ public class OneFragment extends Fragment {
         loadDataFromDatabase();
 
         fabAdd.setOnClickListener(v -> showAddTransactionDialog());
+        fabLoad.setOnClickListener(v -> loadDataFromDatabase());
 
         return view;
     }
@@ -68,7 +71,9 @@ public class OneFragment extends Fragment {
         transactionList.clear();
         transactionList.addAll(dbHelper.getAllTransactions());
         adapter.notifyDataSetChanged();
-        updateDashboard(); // của riêng frag_1
+        updateDashboard(); // hàm này của riêng frag_1
+
+        Toast.makeText(getContext(), "Đã load dữ liệu mới", Toast.LENGTH_SHORT).show();
     }
 
     private void updateDashboard() {
@@ -156,6 +161,7 @@ public class OneFragment extends Fragment {
                 dbHelper.insertTransaction(newTx);
 
                 loadDataFromDatabase();
+                Toast.makeText(getContext(), "Đã thêm dữ liệu mới", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
         });

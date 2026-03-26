@@ -17,6 +17,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     private List<Transaction> transactions;
     private OnItemClickListener listener; // Interface để xử lý sự kiện click
+    private View.OnLongClickListener longClickListener; // Interface để xử lý sự kiện long click
+
 
 
     // Interface để xử lý sự kiện click
@@ -28,6 +30,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.listener = listener;
     }
 
+
+    //Interface để xử lý sự kiện long click
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Transaction transaction);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longClick) {
+        this.longClickListener = (View.OnLongClickListener) longClick;
+    }
+
     public TransactionAdapter(List<Transaction> transactions) {
         this.transactions = transactions;
     }
@@ -37,11 +49,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         public TextView tvDate;
         public TextView tvAmount;
 
+        public TextView tvNote; // tui mới thêm ghi chú
+
+
         public ViewHolder(View view) {
             super(view);
             tvCategory = view.findViewById(R.id.tvCategory);
             tvDate = view.findViewById(R.id.tvDate);
             tvAmount = view.findViewById(R.id.tvAmount);
+            tvNote = view.findViewById(R.id.tvNote); // tui mới thêm ghi chú
         }
 
         // Gắn sự kiện click vào item
@@ -54,6 +70,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                     }
                 }
             });
+
+//            //gan su kien long click
+//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    if (longClickListener != null) {
+//                        longClickListener.onItemLongClick(transaction);
+//                        return true;
+//                    }
+//                    return false;
+//                }
+//            });
         }
     }
 
@@ -72,6 +100,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         Transaction tx = transactions.get(position);
         holder.tvCategory.setText(tx.getCategory());
         holder.tvDate.setText(tx.getDate());
+        holder.tvNote.setText(tx.getNote()); // tui mới thêm ghi chú
+
 
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         String formattedAmount = formatter.format(tx.getAmount()) + " đ";
@@ -84,7 +114,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.tvAmount.setTextColor(Color.parseColor("#F44336"));
         }
 
-        holder.bind(tx, listener); // Gắn sự kiện click vào item
+        holder.bind(tx, listener);
     }
 
     // Số lượng item hiển thị

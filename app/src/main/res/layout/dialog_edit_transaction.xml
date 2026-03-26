@@ -27,8 +27,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="8dp">
-        <RadioButton android:id="@+id/rbExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chi tiêu" android:checked="true"/>
-        <RadioButton android:id="@+id/rbIncome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thu nhập" android:layout_marginStart="16dp"/>
+
+        <RadioButton android:id="@+id/rbExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chi tiêu"
+            android:checked="true"/>
+
+        <RadioButton android:id="@+id/rbIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thu nhập"
+            android:layout_marginStart="16dp"/>
     </RadioGroup>
 
     <EditText
@@ -44,5 +54,12 @@
         android:layout_height="wrap_content"
         android:hint="Ghi chú"
         android:layout_marginTop="8dp" />
+    
+    <Button
+        android:id="@+id/btn_xoa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xóa giao dịch"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

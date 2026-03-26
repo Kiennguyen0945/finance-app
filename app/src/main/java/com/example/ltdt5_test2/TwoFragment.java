@@ -37,7 +37,8 @@ public class TwoFragment extends Fragment {
 
     private Spinner spnThang;
     private RadioGroup radioGroup;
-    private RadioButton rb_TatCa, rb_Thu, rb_Chi;
+
+    private Button btn_Xoa;
 
     private TextView tvEmptyState;
 
@@ -55,16 +56,9 @@ public class TwoFragment extends Fragment {
         spnThang = view.findViewById(R.id.spinnerMonth);
         XuLy_Spinner(); //goi ham xu ly spinner
 
-
         //radiobutton
         radioGroup = view.findViewById(R.id.rgFilterType);
-        rb_TatCa = view.findViewById(R.id.rbAll);
-        rb_Thu = view.findViewById(R.id.rbIncomeOnly);
-        rb_Chi = view.findViewById(R.id.rbExpenseOnly);
         XuLy_RadioButton(); //goi ham xu ly radiobutton
-
-
-
 
 
         // Ánh xạ View
@@ -80,18 +74,18 @@ public class TwoFragment extends Fragment {
         rvAllTransactions.setAdapter(adapter);
 
 
-        // Thiết lập sự kiện click vào item --- chưa xonggggggggggggggg
-//        adapter.setOnItemClickListener(new TransactionAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(Transaction transaction) {
-//                showAddTransactionDialog(transaction);
-//            }
-//        });
+        // Thiết lập sự kiện click vào item
+        adapter.setOnItemClickListener(new TransactionAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Transaction transaction) {
+                showAddTransactionDialog(transaction);
+            }
+        });
+
+
 
         // Load dữ liệu từ Database
         loadDataFromDatabase();
-
-
 
 
 
@@ -105,11 +99,11 @@ public class TwoFragment extends Fragment {
         // Set sự kiện lắng nghe cho rgFilterType (RadioGroup) để lọc Thu/Chi. --- XONGGGGG
         // Gợi ý: Dùng vòng lặp for lọc if (tx.getType() == 1) nhét vào list mới rồi update adapter.
 
-        // TODO CHO THẰNG BẠN 3 (LONG CLICK ĐỂ XÓA):
+        // TODO CHO THẰNG BẠN 3 (LONG CLICK ĐỂ XÓA): - XONG (Thay thế = nút xóa , KO dung longclik)
         // Vào TransactionAdapter.java thêm Interface listener onClick, onLongClick.
         // Ở đây gọi AlertDialog xác nhận Xóa -> gọi dbHelper.deleteTransaction(id) -> Tải lại list.
 
-        // TODO CHO THẰNG BẠN 4 (CLICK ĐỂ SỬA):
+        // TODO CHO THẰNG BẠN 4 (CLICK ĐỂ SỬA): --- XONGGGGGg
         // Mở lại Dialog y hệt bên OneFragment.kt, truyền dữ liệu cũ vào etAmount.setText(...)
         // Sau khi bấm Lưu thì gọi dbHelper.updateTransaction(tx) -> Tải lại list.
 
@@ -122,7 +116,6 @@ public class TwoFragment extends Fragment {
         transactionList.clear();
         transactionList.addAll(dbHelper.getAllTransactions());
         adapter.notifyDataSetChanged();
-
 
         updateEmptyState(tvEmptyState);
 
@@ -202,6 +195,7 @@ public class TwoFragment extends Fragment {
     }
 
 
+    // HÀm kiểm tra có dữ liệu hay ko
     private void updateEmptyState(TextView tvEmptyState) {
         if (transactionList.isEmpty()) {
             tvEmptyState.setVisibility(View.VISIBLE);
@@ -214,6 +208,7 @@ public class TwoFragment extends Fragment {
     private void showAddTransactionDialog(Transaction transaction) {
 
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_transaction, null);
+
         EditText etAmount = dialogView.findViewById(R.id.etAmount);
         EditText etCategory = dialogView.findViewById(R.id.etCategory);
         EditText etNote = dialogView.findViewById(R.id.etNote);
@@ -221,46 +216,101 @@ public class TwoFragment extends Fragment {
 
         android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(requireContext())
                 .setView(dialogView)
-                .setPositiveButton("Lưu", null)
+                .setPositiveButton("Lưu", null) //BUTTON_POSITIVE
                 .setNegativeButton("Hủy", (d, which) -> d.dismiss())
                 .create();
 
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(false); // ko cho nhấn bên ngoài để tắt
+
+        btn_Xoa = dialogView.findViewById(R.id.btn_xoa);
+        btn_Xoa.setOnClickListener(v -> DeleteTransaction(transaction, dialog));
+
+        // lấy dữ liệu cũ
+        long _id = transaction.getId(); // lấy id để cập nhật
+        etAmount.setText(String.valueOf(transaction.getAmount()));
+        etCategory.setText(transaction.getCategory());
+        etNote.setText(transaction.getNote());
 
         dialog.setOnShowListener(dialogInterface -> {
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(v -> {
+
                 String amountStr = etAmount.getText().toString();
                 String category = etCategory.getText().toString().trim();
 
+                //kiểm tra các ô có rỗng ko
                 if (amountStr.isEmpty() || category.isEmpty()) {
                     Toast.makeText(getContext(), "Vui lòng nhập số tiền và danh mục", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                // kiểm tra tiền nhập có sai ko
                 double amount;
                 try {
                     amount = Double.parseDouble(amountStr);
+
                 } catch (NumberFormatException e) {
                     amount = 0.0;
                 }
 
-                if (amount <= 0) {
+                if (amount <= 0) {  // nếu tiền < 0
                     Toast.makeText(getContext(), "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String note = etNote.getText().toString().trim();
+                // lấy type mới (radio button)
                 int type = (rgType.getCheckedRadioButtonId() == R.id.rbIncome) ? 1 : 2;
 
+                //lấy date mới
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String date = sdf.format(new Date());
 
-                Transaction newTx = new Transaction(0, amount, type, category, date, note);
+                // lấy note mới
+                String note = etNote.getText().toString().trim();
+
+                //tạo transaction với các thông tin mới
+                Transaction newTx = new Transaction(_id, amount, type, category, date, note);
                 dbHelper.updateTransaction(newTx); // cập nhật
 
                 loadDataFromDatabase();
                 dialog.dismiss();
+            });
+        });
+
+        dialog.show();
+    }
+
+    private  void DeleteTransaction(Transaction transaction,  android.app.AlertDialog editDialog) {
+
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete_transaction, null);
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .setPositiveButton("Xác nhận", null) //BUTTON_POSITIVE
+                .setNegativeButton("Hủy", (d, which) -> d.dismiss())
+                .create();
+
+        dialog.setCanceledOnTouchOutside(false); // ko cho nhấn bên ngoài để tắt
+
+        // sự kiện nút xóa
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(v -> {
+
+                //tạo transaction với các thông tin mới
+
+                dbHelper.deleteTransaction(transaction.getId());
+
+                loadDataFromDatabase();
+
+                // ĐÓNG CẢ HAI DIALOG
+                dialog.dismiss();
+
+                if (editDialog != null) {
+                    editDialog.dismiss();
+                }
+
+                Toast.makeText(getContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show();
+
             });
         });
 

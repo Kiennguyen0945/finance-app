@@ -136,13 +136,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int updateTransaction(Transaction tx) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(COLUMN_AMOUNT, tx.getAmount());
         values.put(COLUMN_TYPE, tx.getType());
         values.put(COLUMN_CATEGORY, tx.getCategory());
         values.put(COLUMN_DATE, tx.getDate());
         values.put(COLUMN_NOTE, tx.getNote());
-        int result = db.update(TABLE_TRANSACTIONS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(tx.getId())});
+
+        int result = db.update(TABLE_TRANSACTIONS,
+                values,
+                COLUMN_ID + " = ?",
+                new String[]{String.valueOf(tx.getId())}); // chổ này lấy id truyền vào chổ "?"
         db.close();
+
         return result;
     }
 
