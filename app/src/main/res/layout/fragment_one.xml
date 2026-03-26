@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="?android:attr/windowBackground"
     android:padding="16dp">
 
     <!-- Thẻ Tổng Quan Số Dư -->
@@ -14,20 +14,20 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@color/white">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Số dư hiện tại"
-                android:textColor="#757575"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 đ"
-                android:textColor="#000000"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:text="Tổng thu"
                         android:textSize="12sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/tvTotalIncome"
@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:text="Tổng chi"
                         android:textSize="12sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="?android:attr/textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/tvTotalExpense"
@@ -98,35 +98,18 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Placeholder cho Biểu đồ tròn -->
-    <FrameLayout
-        android:id="@+id/chartPlaceholder"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        android:background="#E0E0E0"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/cardBalance">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Biểu đồ sẽ hiển thị ở đây" />
-    </FrameLayout>
-
     <!-- Tiêu đề Giao dịch gần đây -->
     <TextView
         android:id="@+id/tvRecentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="Giao dịch gần đây"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chartPlaceholder" />
+        app:layout_constraintTop_toBottomOf="@id/cardBalance" />
 
     <!-- Danh sách giao dịch -->
     <androidx.recyclerview.widget.RecyclerView
@@ -135,10 +118,9 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvRecentTitle"
-        tools:listitem="@android:layout/simple_list_item_2" />
+        app:layout_constraintTop_toBottomOf="@id/tvRecentTitle" />
 
-    <!-- Nút load (FAB) - Vĩ thêm -->
+    <!-- Nút load (FAB) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_LoadTransaction"
         android:layout_width="wrap_content"
@@ -146,8 +128,10 @@
         android:layout_margin="16dp"
         android:contentDescription="Load giao dịch"
         android:src="@android:drawable/ic_popup_sync"
+        app:backgroundTint="?attr/colorSurface"
+        app:tint="?android:attr/textColorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-         />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Nút thêm (FAB) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -155,10 +139,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="100dp"
         android:contentDescription="Thêm giao dịch"
         android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/fb_blue"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
