@@ -2,4 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Facebook Light Mode Colors -->
+    <color name="fb_light_bg">#F0F2F5</color>
+    <color name="fb_light_surface">#FFFFFF</color>
+    <color name="fb_light_text_primary">#050505</color>
+    <color name="fb_light_text_secondary">#65676B</color>
+
+    <!-- Facebook Dark Mode Colors -->
+    <color name="fb_dark_bg">#18191A</color>
+    <color name="fb_dark_surface">#242526</color>
+    <color name="fb_dark_text_primary">#E4E6EB</color>
+    <color name="fb_dark_text_secondary">#B0B3B8</color>
+    <color name="fb_dark_divider">#3E4042</color>
+
+    <color name="fb_blue">#1877F2</color>
 </resources>

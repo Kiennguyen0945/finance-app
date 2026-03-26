@@ -1,7 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.LTDT5Test2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Facebook Dark Mode Colors -->
+        <item name="android:windowBackground">@color/fb_dark_bg</item>
+        <item name="colorSurface">@color/fb_dark_surface</item>
+        <item name="colorPrimary">@color/fb_dark_surface</item>
+        <item name="colorOnPrimary">@color/fb_dark_text_primary</item>
+        <item name="android:textColorPrimary">@color/fb_dark_text_primary</item>
+        <item name="android:textColorSecondary">@color/fb_dark_text_secondary</item>
+        <item name="android:navigationBarColor">@color/fb_dark_bg</item>
+        <item name="android:statusBarColor">@color/fb_dark_bg</item>
     </style>
 </resources>
