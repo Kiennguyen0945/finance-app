@@ -1,0 +1,34 @@
+1. Thống kê chi tiêu theo Danh mục
+•
+Logic: Trong ThreeFragment.java, mình đã viết hàm loadStatistics(). Hàm này sẽ lấy toàn bộ giao dịch từ database, lọc ra các khoản Chi (Type == 2), sau đó dùng một HashMap để gom nhóm theo tên danh mục và cộng dồn số tiền.
+•
+Giao diện:
+◦
+Tạo file item_stat.xml để hiển thị từng dòng thống kê (Tên danh mục | Tổng tiền).
+◦
+Tạo StatAdapter.java để đổ dữ liệu vào RecyclerView (rvStats).
+◦
+Xử lý Edge Case: Nếu danh mục có tổng chi bằng 0đ, nó sẽ không xuất hiện trong list (vì mình chỉ duyệt qua các giao dịch thực tế có trong DB).
+2. Chế độ Dark Mode & Lưu trạng thái
+•
+Switch Toggle: Sử dụng switchDarkMode để người dùng bật/tắt.
+•
+SharedPreferences: Lưu cờ isDarkMode vào file theme_prefs.
+•
+MainActivity: Mình đã cập nhật MainActivity.java để kiểm tra SharedPreferences ngay khi ứng dụng khởi chạy (applySavedTheme()), giúp tránh hiện tượng màn hình bị "nháy" từ sáng sang tối khi mở lại app.
+3. Wipe Data (Làm sạch dữ liệu)
+•
+Nút Xóa: Đã bắt sự kiện cho btnWipeData.
+•
+Cảnh báo: Hiển thị một AlertDialog xác nhận trước khi xóa để tránh người dùng bấm nhầm.
+•
+Cập nhật UI: Sau khi xóa thành công trong DB, hàm loadStatistics() được gọi lại ngay lập tức để làm trống danh sách thống kê trên màn hình.
+Các file đã tạo/chỉnh sửa:
+1.
+ThreeFragment.java: Xử lý logic chính cho Thống kê, Dark Mode và Xóa dữ liệu.
+2.
+StatAdapter.java: Adapter cho danh sách thống kê.
+3.
+item_stat.xml: Layout cho mỗi dòng thống kê.
+4.
+MainActivity.java: Cập nhật để giữ trạng thái Dark Mode khi khởi động.
