@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,10 +83,9 @@ public class TwoFragment extends Fragment {
             }
         });
 
+        // Load dữ liệu ban đầu
+        filterData();
 
-
-        // Load dữ liệu từ Database
-        loadDataFromDatabase();
 
 
 
@@ -113,11 +113,7 @@ public class TwoFragment extends Fragment {
 
     // Hàm load dữ liệu từ database
     private void loadDataFromDatabase() {
-        transactionList.clear();
-        transactionList.addAll(dbHelper.getAllTransactions());
-        adapter.notifyDataSetChanged();
-
-        updateEmptyState(tvEmptyState);
+        filterData();
 
     }
 
@@ -149,12 +145,21 @@ public class TwoFragment extends Fragment {
             //set - do du lieu
             spnThang.setAdapter(adapter);
 
+            // Mặc định chọn tháng hiện tại khi mở ứng dụng
+            int currentMonth = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date()));
+            spnThang.setSelection(currentMonth - 1);
+
         }
 
         // xử lý sự kiện khi chọn item trong spinner
         spnThang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                filterData();
+
+                String selectedItem = adapterView.getItemAtPosition(i).toString();
+                Toast.makeText(getContext(), "Bạn chọn: " + selectedItem    , Toast.LENGTH_SHORT).show();
 
             }
             @Override
@@ -170,26 +175,7 @@ public class TwoFragment extends Fragment {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 
-            transactionList.clear();
-
-            if (checkedId == R.id.rbAll) {
-                // chọn Tat ca
-                transactionList.addAll(dbHelper.getAllTransactions());
-
-            } else if (checkedId == R.id.rbIncomeOnly) {
-                // chọn Thu
-                transactionList.addAll(dbHelper.get_Incomes_Transactions()); // hàm load dữ liệu THU từ database (mới tạo bên DatabaseHelpler)
-
-            } else if (checkedId == R.id.rbExpenseOnly) {
-                // chọn Chi
-                transactionList.addAll(dbHelper.get_Expenses_Transactions());
-            }
-
-            adapter.notifyDataSetChanged();
-
-
-            updateEmptyState(tvEmptyState);
-
+            filterData();
         });
 
     }
@@ -227,7 +213,14 @@ public class TwoFragment extends Fragment {
 
         // lấy dữ liệu cũ
         long _id = transaction.getId(); // lấy id để cập nhật
-        etAmount.setText(String.valueOf(transaction.getAmount()));
+
+        // set dữ liệu cũ vào dialog
+
+        DecimalFormat df = new DecimalFormat("#,###"); //điều chỉnh hiển thị ra số đầy đủ
+        double value = transaction.getAmount();
+        String result = df.format(value);
+
+        etAmount.setText(result);
         etCategory.setText(transaction.getCategory());
         etNote.setText(transaction.getNote());
 
@@ -315,6 +308,54 @@ public class TwoFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+
+    /**
+     * HÀM QUAN TRỌNG: Lọc dữ liệu kết hợp cả Tháng và Loại giao dịch
+     */
+    private void filterData() {
+        if (spnThang == null || radioGroup == null) return;
+
+        // 1. Lấy tháng đang chọn từ Spinner (giá trị từ 1 đến 12)
+        int selectedMonth = spnThang.getSelectedItemPosition() + 1;
+
+        // 2. Lấy loại đang chọn từ RadioGroup
+        int checkedId = radioGroup.getCheckedRadioButtonId();
+
+        // 3. Lấy tất cả giao dịch từ DB để lọc trong bộ nhớ (hoặc viết query SQL lọc thẳng trong DB)
+        List<Transaction> allTransactions = dbHelper.getAllTransactions();
+        List<Transaction> filteredList = new ArrayList<>();
+
+        for (Transaction tx : allTransactions) {
+            // Tách chuỗi ngày "dd/MM/yyyy" để lấy tháng
+            String[] dateParts = tx.getDate().split("/");
+
+            if (dateParts.length >= 2) {
+                int txMonth = Integer.parseInt(dateParts[1]);
+
+                // Kiểm tra điều kiện 1: Đúng tháng đang chọn
+                if (txMonth == selectedMonth) {
+
+                    // Kiểm tra điều kiện 2: Đúng loại (Tất cả / Thu / Chi)
+                    if (checkedId == R.id.rbAll) {
+                        filteredList.add(tx);
+                    } else if (checkedId == R.id.rbIncomeOnly && tx.getType() == 1) {
+                        filteredList.add(tx);
+                    } else if (checkedId == R.id.rbExpenseOnly && tx.getType() == 2) {
+                        filteredList.add(tx);
+                    }
+                }
+            }
+        }
+
+        // 4. Cập nhật danh sách hiển thị
+        transactionList.clear();
+        transactionList.addAll(filteredList);
+        adapter.notifyDataSetChanged();
+
+        // 5. Kiểm tra trạng thái rỗng
+        updateEmptyState(tvEmptyState);
     }
 
 }// end
