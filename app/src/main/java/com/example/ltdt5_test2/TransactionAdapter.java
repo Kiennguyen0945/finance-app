@@ -12,20 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-
+//Luồng dữ liệu Data -> Adapter -> ViewHolder -> RecycleView hiển thị
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
+    // Danh sách giao dịch
     private List<Transaction> transactions;
     private OnItemClickListener listener; // Interface để xử lý sự kiện click
     private View.OnLongClickListener longClickListener; // Interface để xử lý sự kiện long click
 
 
-
+// 
     // Interface để xử lý sự kiện click
     public interface OnItemClickListener {
         void onItemClick(Transaction transaction);
     }
-
+    // Gán
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -43,7 +44,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public TransactionAdapter(List<Transaction> transactions) {
         this.transactions = transactions;
     }
-
+    // ViewHolder là một item UI trong list
+    // Mỗi item có category, date, amount, note
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvCategory;
         public TextView tvDate;
@@ -60,7 +62,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvNote = view.findViewById(R.id.tvNote); // tui mới thêm ghi chú
         }
 
-        // Gắn sự kiện click vào item
+        // Gắn sự kiện click vào item -> trả đúng về object giao dịch
         public void bind(final Transaction transaction, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,6 +90,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     // Tạo ViewHolder
     @NonNull
     @Override
+    // Tạo UI cho một cái item -> biến xml item thành view
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_transaction, parent, false);
@@ -97,7 +100,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     // Gắn dữ liệu vào ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Lấy data tại vị trí
         Transaction tx = transactions.get(position);
+        // Gán dữ liệu vô UI
         holder.tvCategory.setText(tx.getCategory());
         holder.tvDate.setText(tx.getDate());
         holder.tvNote.setText(tx.getNote()); // tui mới thêm ghi chú
@@ -106,6 +111,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         String formattedAmount = formatter.format(tx.getAmount()) + " đ";
 
+        // Phân biệt màu chữ dựa trên loại giao dịch
         if (tx.getType() == 1) { // Thu
             holder.tvAmount.setText("+" + formattedAmount);
             holder.tvAmount.setTextColor(Color.parseColor("#4CAF50"));

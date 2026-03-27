@@ -62,12 +62,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Lấy tất cả giao dịch (CRUD - Read)
     public List<Transaction> getAllTransactions() {
+        // Lấy toàn bộ dữ liệu ở SQLite và trả về ở dạng List
         List<Transaction> list = new ArrayList<>();
+        // Mở db chỉ đọc mà không ghi
         SQLiteDatabase db = this.getReadableDatabase();
+        // Cursor để duyệt từng dòng dữ liệu
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TRANSACTIONS + " ORDER BY " + COLUMN_ID + " DESC", null);
-
+        // Nếu dữ liệu có ít nhất một dòng thì di chuyển đến dòng đầu tiên
         if (cursor.moveToFirst()) {
+        // do = duyệt từng dòng
             do {
+        // Mỗi dòng db tạo một object tên là transaction
                 Transaction transaction = new Transaction(
                         cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID)),
                         cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT)),
@@ -76,9 +81,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOTE))
                 );
+        // Thêm vào list
                 list.add(transaction);
+        // Lọc sang dòng tiếp theo
             } while (cursor.moveToNext());
         }
+        // Đóng lại giải phóng bộ nhớ
         cursor.close();
         db.close();
         return list;

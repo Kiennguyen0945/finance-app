@@ -83,6 +83,7 @@ public class TwoFragment extends Fragment {
             }
         });
 
+
         // Load dữ liệu ban đầu
         filterData();
 
@@ -114,7 +115,14 @@ public class TwoFragment extends Fragment {
     // Hàm load dữ liệu từ database
     private void loadDataFromDatabase() {
         filterData();
+    }
 
+    // THÊM ĐOẠN CODE NÀY VÀO
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Mỗi khi người dùng vuốt sang Tab 2, tự động load lại dữ liệu mới nhất
+        filterData(); 
     }
 
     //Hàm xử lý spinner chọn Tháng.
@@ -216,7 +224,7 @@ public class TwoFragment extends Fragment {
 
         // set dữ liệu cũ vào dialog
 
-        DecimalFormat df = new DecimalFormat("#,###"); //điều chỉnh hiển thị ra số đầy đủ
+        DecimalFormat df = new DecimalFormat("#"); //điều chỉnh hiển thị ra số đầy đủ
         double value = transaction.getAmount();
         String result = df.format(value);
 
